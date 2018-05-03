@@ -1,0 +1,163 @@
+#pragma once
+#include <utility>
+using namespace std;
+
+template<class K, size_t M = 3>
+struct BTreeNode
+{
+	//K _keys[M-1];
+	//BTreeNode* _subs[M];
+	// 为了插入方便，关键字和孩子均多给了一个空间
+	K _keys[M];
+	BTreeNode* _subs[M+1];
+	BTreeNode* _pParent;
+	size_t _size;   // 当前节点中有效元素的个数
+
+	BTreeNode()
+		: _size(0)
+		, _pParent(NULL)
+	{
+		for(size_t i = 0; i < M+1; ++i)
+			_subs[i] = NULL;
+	}
+};
+
+template<class K, size_t M = 3>
+class BTree
+{
+	typedef BTreeNode<K, M> Node;
+	typedef Node* PNode;
+public:
+	BTree()
+		: _pRoot(NULL)
+	{}
+
+	bool Insert(const K& key)
+	{
+		if(NULL == _pRoot)
+		{
+			_pRoot = new Node;
+			_pRoot->_keys[0] = key;
+			_pRoot->_size = 1;
+			return true;
+		}
+
+		// 查找当前元素的插入位置
+		pair<PNode, int> ret = Find(key);
+		if(-1 != ret.second)
+			return false;
+
+		// ret.first一定是叶子结点
+		PNode pCur = ret.first;
+		K k = key;
+		PNode pSub = NULL;
+		while(true)
+		{
+			_InsertKey(pCur, k, pSub);
+			if(pCur->_size < M)
+				return true;
+
+			// pCur结点不满足B树的性质， 对该节点进行分裂
+			size_t mid = (pCur->_size >> 1);
+			PNode pNewNode = new Node;
+
+			// 将中间元素右侧的所有元素搬移到新结点中
+			size_t idx = 0;
+			size_t index = mid+1;
+			for(; index < pCur->_size; ++index)
+			{
+				pNewNode->_keys[idx] = pCur->_keys[index];
+				pNewNode->_subs[idx++] = pCur->_subs[index];
+
+				// 更新孩子的双亲
+				if(pCur->_subs[index])
+					pCur->_subs[index]->_pParent = pNewNode;
+			}
+
+			// 孩子比关键字多搬移一个
+			pNewNode->_subs[idx] = pCur->_subs[index];
+			if(pCur->_subs[index])
+				pCur->_subs[index]->_pParent = pNewNode;
+
+			// 更新节点中元素的个数
+			pNewNode->_size = idx;
+			pCur->_size = pCur->_size - idx - 1;
+
+			// 将分裂节点中间位置的元素朝pCur的双亲结点中插入
+			k = pCur->_keys[mid];
+			if(pCur == _pRoot)
+			{
+				_pRoot = new Node;
+				_pRoot->_keys[0] = k;
+				_pRoot->_subs[0] = pCur;
+				_pRoot->_subs[1] = pNewNode;
+				_pRoot->_size = 1;
+				pCur->_pParent = _pRoot;
+				pNewNode->_pParent = _pRoot;
+				return true;
+			}
+			else
+			{
+				pSub = pNewNode;
+				pCur = pCur->_pParent;
+			}
+		}
+
+		return true;
+	}
+
+	pair<PNode, int> Find(const K& key)
+	{
+		PNode pCur = _pRoot;
+		PNode pParent = NULL;
+		while(pCur)
+		{
+			size_t index = 0;
+			while(index < pCur->_size)
+			{
+				if(key == pCur->_keys[index])
+					return pair<PNode, int>(pCur, index);
+				else if(key < pCur->_keys[index])
+					break;
+				else
+					index++;
+			}
+
+			pParent = pCur;
+			pCur = pCur->_subs[index];
+		}
+
+		return pair<PNode, int>(pParent, -1);
+	}
+
+private:
+	void _InsertKey(PNode pCur, const K& key, PNode pSub)
+	{
+		int end = pCur->_size-1;
+		while(end >= 0 && key < pCur->_keys[end])
+		{
+			pCur->_keys[end+1] = pCur->_keys[end];
+			pCur->_subs[end+2] = pCur->_subs[end+1];
+			end--;
+		}
+
+		pCur->_keys[end+1] = key;
+		pCur->_subs[end+2] = pSub;
+		pCur->_size++;
+
+		if(pSub)
+			pSub->_pParent = pCur;
+	}
+
+private:
+	PNode _pRoot;
+};
+
+
+void TestBTree()
+{
+	int array[] = {53, 75, 139, 49, 145, 36, 101};
+	BTree<int> bt;
+	for(size_t idx = 0; idx < sizeof(array)/sizeof(array[0]); ++idx)
+		bt.Insert(array[idx]);
+}
