@@ -1,0 +1,133 @@
+
+
+编写一个程序，它从标准输入读取C源代码，并验证所有的花括号都正确的成对出现。
+
+{}
+{}{}
+{{}}
+{{{}}}}
+{{{}}
+
+}{
+{}{}{}}{
+
+#include<stdio.h>
+#include<stdlib.h>
+
+int brace, brack, paren;
+
+void in_mutli_comment()
+{
+	int c = getchar();
+	int d = getchar();
+	// *a
+	while (!(c == '*' && d == '/')) {
+		c = d;
+		d = getchar();
+	}
+}
+
+void in_line_comment()
+{
+	int c;
+	while ((c = getchar()) != '\n')
+		;
+}
+
+void in_quote(char c)
+{
+	char d;
+
+	while (1) {
+		d = getchar();
+		if (d == '\\')
+			getchar();
+		if (d == c)
+			break;
+	}
+}
+
+void find(char c)
+{
+	if (c == '{')
+		brace++;
+	else if (c == '[')
+		brack++;
+	else if (c == '(')
+		paren++;
+	else if (c == '}')
+		brace--;
+	else if (c == ']')
+		brack--;
+	else if (c == ')')
+		paren--;
+}
+
+int main(void)
+{
+	int c;
+
+	while ((c = getchar()) != EOF) {
+		if (c == '/') {// 有可能进入注释
+			int d = getchar();
+			if (d == EOF) break;
+			if (d == '*') // 多行注释
+				in_mutli_comment();
+			else if (d == '/') // 单行注释
+				in_line_comment();
+			else
+				find(d);
+		}
+		else if (c == '\'' || c == '"') { // 进入字符或字符串
+			in_quote(c);
+		}
+		else {
+			find(c);
+		}
+		if (brace < 0) {
+			printf("大括号有问题\n");
+			brace = 0;
+		}
+		if (brack < 0) {
+			printf("中括号有问题\n");
+			brack = 0;
+		}
+		if (paren < 0) {
+			printf("中括号有问题\n");
+			paren = 0;
+		}
+	} // end while 
+
+	if (brace > 0) {
+		printf("大括号有问题\n");
+	}
+	if (brack > 0) {
+		printf("中括号有问题\n");
+	}
+	if (paren > 0) {
+		printf("小括号有问题\n");
+	}
+
+	system("pause");
+	return 0;
+}
+
+5.  
+5位运动员参加了10米台跳水比赛，有人让他们预测比赛结果
+A选手说：B第一，我第三。
+B选手说：我第二，E第四。
+C选手说：我第一，D第二。
+D选手说：C最后，我第三。
+E选手说：我第四，A第一。
+比赛结束后，每位选手都说对了一半，请编程确定比赛的名次。
+
+6.  
+日本某地发生了一件谋杀案，警察通过排查确定杀人凶手必为4个嫌疑犯的一个。以下为4个嫌疑犯的供词。
+A说：不是我。
+B说：是C。
+C说：是D。
+D说：C在胡说。
+已知3个人说了真话，1个人说的是假话。
+现在请根据这些信息，写一个程序来确定到底谁是凶手。
+
+
