@@ -1,0 +1,380 @@
+#include <iostream>
+using namespace std;
+
+/*
+extern "C" int Add(int left, int right)
+{
+	return left+right;
+}
+
+// char Add(char left, char right)
+// {
+// 	return left+right;
+// }
+
+
+int main()
+{
+	Add(1,2);  
+	Add('1', '2');
+	Add(1, (int)'2');
+	//Add(1, "132");
+	return 0;
+}
+*/
+
+/*
+void FunTest()
+{}
+
+void FunTest(int a)
+{}
+
+int main()
+{
+	FunTest();
+	FunTest(10);
+	return 0;
+}
+*/
+
+/*
+// 传值  传址
+void Swap(int left, int right)
+{
+	int temp = left;
+	left = right;
+	right = temp;
+}
+
+void Swap(int* pLeft, int* pRight)
+{
+	int temp = *pLeft;
+	*pLeft = *pRight;
+	*pRight = temp;
+}
+
+int main()
+{
+	int a = 10;
+	int b = 20;
+	Swap(a, b);
+	printf("a = %d\n", a);
+	printf("b = %d\n", b);
+
+	Swap(&a, &b);
+	printf("a = %d\n", a);
+	printf("b = %d\n", b);
+	return 0;
+}
+*/
+
+/*
+int main()
+{
+	int a = 10;
+	char& ra = a;
+
+	a = 20;
+	ra = 30;
+
+	printf("%p\n", &a);
+	printf("%p\n", &ra);
+	return 0;
+}
+*/
+
+/*
+int main()
+{
+	int a = 10;
+	int b = 20;
+	int& ra1 = a;
+	int& ra2 = a;
+
+	ra1 = 20;
+	ra2 = 30;
+	&ra1 = b;
+	return 0;
+}
+*/
+
+/*
+int main()
+{
+	int a = 10;
+	int& ra = a;
+	ra = 20;
+
+	const int& rb = a;
+	//rb = 30;
+	return 0;
+}
+*/
+
+/*
+int main()
+{
+	const int a = 10;
+	const int& ra = a;
+
+	const int& b = 10;
+
+
+	return 0;
+}
+*/
+
+/*
+int main()
+{
+	double d = 12.34;
+	const int& rd = d;
+
+	return 0;
+}
+*/
+
+/*
+int main()
+{
+	int b = 0;
+	int a[10];// int[10]
+	cout<<sizeof(a)<<endl;
+	int (&ra)[10] = a;
+
+	ra[0] = 100;
+	return 0;
+}
+*/
+
+// c++ 传值  传址 传引用
+// void Swap(int left, int right)
+// {
+// 	int temp = left;
+// 	left = right;
+// 	right = temp;
+// }
+
+/*
+void Swap(int* pLeft, int* pRight)
+{
+int temp = *pLeft;
+*pLeft = *pRight;
+*pRight = temp;
+}
+
+void Swap(int &left, int& right)
+{
+int temp = left;
+left = right;
+right = temp;
+}
+
+int main()
+{
+	int a = 10;
+	int b = 20;
+	Swap(a, b);
+	return 0;
+}
+*/
+
+/*
+int& FunTest()
+{
+	int a = 10;
+	return a;
+}
+
+int main()
+{
+	int& b = FunTest();
+	printf("%d\n", b);
+	printf("%d\n", b);
+	printf("%d\n", b);
+	return 0;
+}
+*/
+
+/*
+int g_a = 10;
+
+int& FunTest(int& a)
+{
+	return g_a;
+}
+
+int main()
+{
+	int b = 10;
+	int& rb = FunTest(b);
+	printf("%d\n", rb);
+	printf("%d\n", rb);
+	printf("%d\n", rb);
+	return 0;
+}
+*/
+
+/*
+#include <Windows.h>
+struct A
+{
+	int array[100000];
+};
+
+void FunTest(A* a)//
+{}
+
+void FunTest()
+{
+	int begin = GetTickCount();
+	A a;
+	for(int i = 0; i < 100000; ++i)
+		FunTest(&a);
+
+	int end = GetTickCount();
+
+	printf("%d\n", end - begin);
+}
+
+int main()
+{
+	FunTest();
+	return 0;
+}
+*/
+
+/*
+int main()
+{
+	int a = 10;
+	int& ra = a;
+	ra = 20;
+
+	int* pa = &a;
+	*pa = 30;
+	return 0;
+}
+*/
+
+/*
+void Swap(int* left, int* right)
+{
+	int temp = *left;
+	*left = *right;
+	*right = temp;
+}
+
+void Swap(int &left, int& right)
+{
+	int temp = left;
+	left = right;
+	right = temp;
+}
+
+int main()
+{
+	int a = 10;
+	int b = 20;
+
+	int& ra = a;    //int * const p 
+	const int& cra = a; //const int * const p 
+	//cra = 10;
+
+	int* pa = &a;
+	int* pa = &b;
+
+	const int* p1;
+	int const * p2;
+	int*const p3 = &a;
+
+	//p3 = &b;
+	const int* const p4 = &a;
+
+	Swap(&a, &b);
+	Swap(a, b);
+	return 0;
+}
+*/
+
+/*
+int main()
+{
+	//int& a;
+	//int*p = NULL;
+
+	/*
+	int a = 10;
+	int b = 20;
+	int& ra = a;
+
+	int* pa = &a;
+	pa = &b;
+	*
+
+	/*
+	char* pa;
+	printf("%d\n", sizeof(pa));
+
+	char a = 'a';
+	char& ra = a;
+	printf("%d\n", sizeof(ra));
+	*
+
+	
+	int a = 10;
+	int& ra = a;
+	ra++;
+
+	int*pa = &a;
+	*pa = 30;
+	ra = 40;
+
+	pa++;
+
+	int**p;
+
+	// C++11
+	//const int&& rra = a;
+	return 0;
+}*/
+
+/*
+void Swap(int &left, int &right)
+{
+	int temp = left;
+	left = right;
+	right = temp;
+}
+
+int main()
+{
+	int iNum = 10;
+	int *pNum = NULL;
+	Swap(iNum, *pNum); // Swap(&iNum, pNum);
+	return 0;
+}
+*/
+
+/*
+namespace N
+{
+	int a = 10;
+	void FunTest()
+	{}
+}
+
+int a = 20;
+int main()
+{
+	int a = 30;
+
+	printf("%d\n", a);
+	printf("%d\n", ::a);
+	printf("%d\n", N::a);
+
+	return 0;
+}
+*/
+
