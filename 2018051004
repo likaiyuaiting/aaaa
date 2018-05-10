@@ -1,0 +1,317 @@
+#include <iostream>
+using namespace std;
+
+/*
+class Test
+{
+public:
+	void FunTest()
+	{
+		cout<<this<<endl;
+		this->_data = 10;
+	}
+
+	int _data;
+};
+
+int main()
+{
+	Test t;
+	t.FunTest();
+
+	Test* pt = &t;  // mov ecx  pt;
+	pt->FunTest(); //call Test::FunTest()
+
+	pt = NULL;
+	pt->FunTest();  //Test::FunTest(pt(NULL))
+	return 0;
+}
+*/
+
+#if 0
+class Date
+{
+public:
+	/*
+	Date(int year = 1900, int month = 1, int day = 1)
+		: _year(year)
+		, _day(day)
+		, _month(month)
+	{
+		// 当前对象已经存在
+		cout<<this<<endl;
+		this->_year = year;
+		_month = month;
+		_day = day;
+	}
+	*/
+	// 2017 10 23  --> 2017 23  23
+	Date(int year = 1900, int month = 1, int day = 1)
+		: a(year)
+		//, b(year)
+// 		: _year(year)
+// 		, _month(_day)
+// 		, _day(day)
+	{
+		/*b = 10;*/
+		_year = year;
+		_month = month;
+		_day = day;
+	}
+
+	int _year;
+	int _month;
+	int _day;
+
+	int& a;
+	const int b;
+};
+
+
+void FunTest()
+{
+	Date d1(2017, 10, 23);  // call Date::Date();
+	//Date d2;  // Date::Date() DA
+}
+
+int main()
+{
+	FunTest();
+	return 0;
+}
+#endif
+
+/*
+class Time
+{
+public:
+	Time(int hour, int minute, int second)
+		: _hour(hour)
+		, _minute(minute)
+		, _Second(second)
+	{}
+private:
+	int _hour;
+	int _minute;
+	int _Second;
+};
+
+class Date
+{
+public:
+Date(int year = 1900, int month = 1, int day = 1)
+: _year(year)
+, _month(_day)
+, _day(day)
+, _t(0,0,0)
+{}
+
+int _year;
+int _month;
+int _day;
+
+Time _t;
+};
+
+int main()
+{
+	Date d1(2017, 10, 23);
+	return 0;
+}
+*/
+
+/*
+class Time
+{
+public:
+	Time(int hour = 0, int minute = 0, int second = 0)
+		: _hour(hour)
+		, _minute(minute)
+		, _Second(second)
+	{}
+private:
+	int _hour;
+	int _minute;
+	int _Second;
+};
+
+class Test
+{
+	Test()
+	{}
+};
+
+// 
+// 1、
+class Date
+{
+public:
+	Date(int year, int month, int day)
+		/*: _t()*
+	{
+		_year = year;
+		_month = month;
+		_day = day;
+	}
+// 	Date()  // 显式
+// 	{}
+
+// 	Date()
+// 		: _t()
+// 	{}
+
+
+	/*
+	Date()
+	{}
+	*
+private:
+	int _year;
+	int _month;
+	int _day;
+	Time _t;
+};
+
+int main()
+{
+	Date d1;  // call Date::Date()  call Time::Time
+	return 0;
+}
+*/
+
+/*
+class Test
+{
+	int _a;
+	int* p;
+	int array[10];
+};
+
+
+Test g_t;
+
+int main()
+{
+	Test t;
+	return 0;
+}
+*/
+
+/*
+class Test
+{
+public:
+	explicit Test(int a/*, int b*)
+		: _a(a)
+		, _b(0)
+	{}
+
+	int _a;
+	int _b;
+};
+
+
+int main()
+{
+	Test t(10/*, 20*);
+	int a = 20;
+	char b = 'a';
+	a = b;
+
+	t = a;
+	return 0;
+}
+*/
+
+
+/*
+// 拷贝构造函数没有给出的必要？什么情况下拷贝构造函数一定要给出来？
+class Date
+{
+public:
+	Date(int year, int month, int day)
+	{
+		_year = year;
+		_month = month;
+		_day = day;
+	}
+
+// 	Date(const Date& d)
+// 		: _year(d._year)
+// 		, _month(d._month)
+// 		, _day(d._day)
+// 	{}
+
+private:
+	int _year;
+	int _month;
+	int _day;
+};
+
+
+int main()
+{
+	Date d1(2017, 10, 23);
+	Date d2(d1);
+	return 0;
+}
+*/
+
+class Date
+{
+public:
+	Date(int year, int month, int day)
+	{
+		p = (int*)malloc(sizeof(int));
+		_year = year;
+		_month = month;
+		_day = day;
+		cout<<"Date(int,int,int):"<<this<<endl;
+	}
+
+	Date(const Date& d)
+		: _year(d._year)
+		, _month(d._month)
+		, _day(d._day)
+	{
+		p = (int*)malloc(sizeof(int));
+		cout<<"Date(Date&):"<<this<<endl;
+	}
+
+	~Date()
+	{
+		if(p)
+			free(p);
+		cout<<"~Date():"<<this<<endl;
+	}
+
+private:
+	int _year;
+	int _month;
+	int _day;
+	int* p;
+};
+
+Date FunTest1(Date& d)
+{
+	return d;
+}
+
+void FunTest2()
+{
+	Date d1(2017, 10, 23);
+	Date d2(d1);
+}
+
+int main()
+{
+	FunTest2();
+
+	Date d1(2017,10,23);
+	FunTest1(d1);
+
+	Date d2(1900, 1, 1);
+	d2 = FunTest1(d1);
+	return 0;
+}
+
