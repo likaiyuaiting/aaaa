@@ -1,0 +1,227 @@
+#include <stdio.h>
+// vs 6.0
+
+/*
+/*int*void FunTest()
+{
+	//return 0;
+}
+
+int main()
+{
+	return 0;
+}
+*/
+
+/*
+void FunTest()
+{
+	printf("FunTest()\n");
+}
+
+int main()
+{
+	FunTest();
+	//FunTest(10);
+	//FunTest(10, 20);
+	//FunTest(10, 20, 30);
+	return 0;
+}
+*/
+
+/*
+#include <malloc.h>
+
+// 1000---> 100
+void* GetMemory(int size = 100)
+{
+	printf("size = %d\n", size);
+	return malloc(size);
+}
+
+int main()
+{
+	
+	GetMemory(10);
+	GetMemory();
+	return 0;
+}
+*/
+/*
+// 全缺省参数
+void FunTest(int a = 1, int b = 2, int c = 3)
+{
+	printf("a = %d\n", a);
+	printf("b = %d\n", b);
+	printf("c = %d\n", c);
+}
+
+int main()
+{
+	FunTest();
+	FunTest(10);
+	FunTest(10, 20);
+	FunTest(10, 20, 30);
+	return 0;
+}
+*/
+
+/*
+// 半缺省参数：只能从右往左一次来给
+//void FunTest(int a, int b = 1, int c = 1)  Y
+//void FunTest(int a, int b = 1, int c = 1)   N
+//void FunTest(int a=1, int b, int c = 1)  N
+void FunTest(int a, int b, int c = 1)
+{
+	printf("a = %d\n", a);
+	printf("b = %d\n", b);
+	printf("c = %d\n", c);
+}
+
+int main()
+{
+	FunTest(10, 20);
+// 	FunTest();
+// 	FunTest(10);
+// 	FunTest(10, 20);
+// 	FunTest(10, 20, 30);
+	return 0;
+}
+*/
+
+/*
+int g_a = 10;
+void FunTest(int a, int b = a)
+{
+
+}
+
+int main()
+{
+	FunTest();
+	FunTest(10);
+
+	return 0;
+}
+*/
+
+/*
+int Add_int(int left, int right)
+{
+	return left+right;
+}
+
+double Add_double(double left, double right)
+{
+	return left+right;
+}
+
+int main()
+{
+	int a = Add_int(10, 20);
+	double d = Add_double(1.1, 2.1);
+	return 0;
+}
+*/
+
+
+/*
+// 同一个作用域：函数名必须相同，参数列表必须不同(个数、类型、次序)
+char Add(char left, char right)
+{
+	return left+right;
+}
+
+int Add(char left, char right)
+{
+	return left+right;
+}
+
+int Add(int left, int right)
+{
+	return left+right;
+}
+
+double Add(double left, double right)
+{
+	return left+right;
+}
+
+
+int main()
+{
+	int a = Add(10, 20);
+	double b = Add(1.1, 2.1);
+	char c = Add('1', '2');  //49 + 50 =99
+	return 0;
+}
+*/
+
+/*
+// 参数列表不同：个数、类型、次序
+void FunTest()
+{}
+
+void FunTest(int a)
+{}
+
+void FunTest(char a)
+{}
+
+void FunTest(int a, char b)
+{}
+
+void FunTest(char a, int b)
+{}
+
+
+int main()
+{
+	return 0;
+}
+*/
+
+/*C语言
+// Add
+char Add(char left, char right) // _Add
+{
+	return left+right;
+}
+
+int Add(int left, int right);  // _Add
+// {
+// 	return left+right;
+// }
+*/
+
+/*
+//C++
+// Add
+char Add(char left, char right); // _Add
+// {
+// 	return left+right;
+// }
+
+int Add(int left, int right);  // _Add
+// {
+// 	return left+right;
+// }
+
+
+int FunTest(int a);
+int FunTest(char a);
+
+int main()
+{
+	Add(10, 20);  //call _Add 入口地址(Add);
+	Add('1', '2');
+	FunTest(10);
+	FunTest('a');
+	return 0;
+}
+*/
+
+int main()
+{
+	return 0;
+}
