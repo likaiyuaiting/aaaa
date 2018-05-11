@@ -1,0 +1,334 @@
+#include <iostream>
+using namespace std;
+
+/*
+// 顺序表---》
+// ?
+class Date
+{
+public:
+	Date(int year, int month, int day)
+		: _year(year)
+		, _month(month)
+		, _day(day)
+	{}
+
+// 	Date(const Date& d)
+// 		: _year(d._year)
+// 		, _month(d._month)
+// 		, _day(d._day)
+// 	{}
+
+	~Date()
+	{}
+
+private:
+	int _year;
+	int _month;
+	int _day;
+};
+
+int main()
+{
+	Date d1(2017, 10, 26);
+	Date d2(d1);
+	return 0;
+}
+*/
+
+/*
+class Complex
+{
+public:
+	Complex(double real, double image)
+		: _real(real)
+		, _image(image)
+	{}
+
+	// 成员函数
+	Complex operator+(const Complex& c)
+	{
+// 		Complex temp(*this);
+// 		temp._real += c._real;
+// 		temp._image += c._image;
+// 		return temp;
+
+		Complex temp(_real+c._real, _image+c._image);
+		return temp;
+	}
+
+	// 
+// 	Complex Add(const Complex& c)
+// 	{
+// 		Complex temp(*this);
+// 		temp._real += c._real;
+// 		temp._image += c._image;
+// 		return temp;
+// 	}
+
+
+/*private:*
+public:
+	double _real;
+	double _image;
+};
+
+// Complex operator-(const Complex& c1, const Complex& c2)
+// {
+// 	return Complex(c1._real-c2._real, c1._image-c2._image);
+// }
+
+
+// enum DATA{ONE, TWO};
+// // 
+// int operator+(int left, DATA d)
+// {
+// 	return left+d;
+// }
+*/
+
+/*
+class Complex
+{
+public:
+	Complex(double real, double image)
+		: _real(real)
+		, _image(image)
+	{}
+
+	// 成员函数
+	Complex operator+(const Complex& c)
+	{
+		Complex temp(_real+c._real, _image+c._image);
+		return temp;
+	}
+
+	Complex operator-(const Complex& c);
+	Complex operator*(const Complex& c);
+	Complex operator/(const Complex& c);
+	Complex& operator+=(const Complex& c);
+	Complex& operator-=(const Complex& c);
+	Complex& operator*=(const Complex& c);
+	Complex& operator/=(const Complex& c);
+
+	// 赋值运算符
+	Complex& operator=(const Complex& c)
+	{
+		if(this != &c)
+		{
+			_real = c._real;
+			_image = c._image;
+		}
+
+		return *this;
+	}
+
+	bool operator==(const Complex& c)
+	{
+		return _real == c._real && _image == c._image;
+	}
+
+	//c1(1.0, 2.0)
+	//c2(3.0, 4.0)  c3(3.0, 4.0)
+	bool operator!=(const Complex& c)
+	{
+		return !(*this == c);
+	}
+
+private:
+	double _real;
+	double _image;
+};
+
+
+
+int main()
+{
+	int a = 10;
+	int b = 20;
+	int c = a+b;
+
+	a = b = c;
+
+	Complex c1(1.0, 2.0);
+	Complex c2(3.0, 4.0);
+	c1 = c2;
+
+	Complex c3(c1);
+
+	Complex& c4 = c3;
+	c3 = c1+c2;
+	c1 = c2 = c3; // c1.operator=();
+	//c1 == c3;
+	//c1.operator=(c3);  //Complex::operator(&c1, &c3)
+	//c1+c2;
+	c4 = c3;
+	return 0;
+}
+*/
+// 
+// #define 
+class Time
+{
+public:
+	//friend class Date;
+	Time(int hour = 0, int minte = 0, int second = 0)
+		: _hour(hour)
+		, _minute(minte)
+		, _second(second)
+	{}
+
+	void SetHour(int hour)
+	{
+		_hour = hour;
+	}
+
+	int GetHour()
+	{
+		return _hour;
+	}
+
+	void SetMinute(int minute)
+	{
+		_minute = minute;
+	}
+
+	int GetMinute()
+	{
+		return _minute;
+	}
+
+	void SetSecond(int second)
+	{
+		_second = second;
+	}
+
+	int GetSecond()
+	{
+		return _second;
+	}
+
+private:
+	int _hour;
+	int _minute;
+	int _second;
+	// double _d;
+
+	/*
+	void Setd(double d)
+	{
+	     _d = d;
+     }
+
+	 double Getd()
+	 {
+	      return d;
+	 }
+
+	*/
+	// SetGetMacro(double, d);  // #    ##
+};
+
+
+class Date
+{
+public:
+	Date(int year, int month, int day)
+		: _year(year)
+		, _month(month)
+		, _day(day)
+	{}
+
+	Date(const Date& d)
+		: _year(d._year)
+		, _month(d._month)
+		, _day(d._day)
+	{}
+
+	Date& operator=(const Date& d)
+	{
+		if(this != &d)
+		{
+			_year = d._year;
+			_month = d._month;
+			_day = d._day;
+		}
+
+		return *this;
+	}
+
+	//前置++   
+	Date& operator++()
+	{
+		_day += 1;
+		return *this;
+	}
+
+	// 后置++
+	Date operator++(int d)
+	{
+		Date temp(*this);
+		_day += 1;
+		return temp;
+	}
+
+	Date& operator--()
+	{
+		_day -= 1;
+		return *this;
+	}
+
+	Date operator--(int)
+	{
+		Date temp(*this);
+		//_day -= 1;
+		--(*this);
+		return temp;
+	}
+
+// 	void operator<<(ostream& _cout)
+// 	{
+// 		_cout<<_year<<"-"<<_month<<"-"<<_day;
+// 	}
+
+	~Date()
+	{}
+
+	void PrintDate()
+	{
+		cout<<*this<<"-"<<_t._hour<<":"<<_t._minute<<":"<<_t._second<<endl;
+	}
+
+private:
+	int _year;
+	int _month;
+	int _day;
+	Time _t;
+
+	friend ostream& operator<<(ostream& _cout, const Date& d);
+};
+
+// 
+ostream& operator<<(ostream& _cout, const Date& d)
+{
+	_cout<<d._year<<"-"<<d._month<<"-"<<d._day;
+	return _cout;
+}
+
+int main()
+{
+	int a = 10;
+	int b = 0;
+	a = ++b;
+	a = b++;
+	cout<<a<<b<<endl;
+
+	Date d1(2017, 10, 31);
+	Date d2(d1);
+	d1 = ++d2; // d2中的新值
+	d1 = d2++; // d2中的旧值
+	cout<<d1<<endl;
+	//d1<<cout;
+
+	return 0;
+}
