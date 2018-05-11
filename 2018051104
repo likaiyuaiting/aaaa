@@ -1,0 +1,581 @@
+#include <iostream>
+using namespace std;
+
+/*
+// 管理字符串---反例---浅拷贝
+class String
+{
+public:
+	String(const char* pStr = "")
+	{
+		if(NULL == pStr)
+		{
+			_pStr = new char[1];
+			*_pStr = '\0';
+		}
+		else
+		{
+			_pStr = new char[strlen(pStr)+1];
+			strcpy(_pStr, pStr);
+		}
+	}
+
+	String(const String& s)
+		: _pStr(s._pStr)
+	{}
+
+	String& operator=(const String& s)
+	{
+		if(this != &s)
+		{
+			_pStr = s._pStr;
+		}
+
+		return *this;
+	}
+
+	~String()
+	{
+		if(_pStr)
+		{
+			delete[] _pStr;
+			_pStr = NULL;
+		}
+	}
+
+private:
+	char* _pStr;
+};
+
+
+void FunTest()
+{
+	String s1("hello");
+	//String s2(s1);
+
+	String s3;
+	s3 = s1;
+}
+
+int main()
+{
+	FunTest();
+	return 0;
+}
+*/
+
+
+/*
+// 管理字符串---反例---深拷贝--普通版
+class String
+{
+public:
+	String(const char* pStr = "")
+	{
+		if(NULL == pStr)
+		{
+			_pStr = new char[1];
+			*_pStr = '\0';
+		}
+		else
+		{
+			_pStr = new char[strlen(pStr)+1];
+			strcpy(_pStr, pStr);
+		}
+	}
+
+
+	String(const String& s)
+		: _pStr(new char[strlen(s._pStr)+1])
+	{
+		strcpy(_pStr, s._pStr);
+	}
+
+	String& operator=(const String& s)
+	{
+		if(this != &s)
+		{
+			char* pTemp = new char[strlen(s._pStr)+1];
+			strcpy(pTemp, s._pStr);
+			delete[] _pStr;
+			_pStr = pTemp;
+
+// 			delete[] _pStr;
+// 			_pStr = new char[strlen(s._pStr)+1];
+// 			strcpy(_pStr, s._pStr);
+		}
+
+		return *this;
+	}
+
+	~String()
+	{
+		if(_pStr)
+		{
+			delete[] _pStr;
+			_pStr = NULL;
+		}
+	}
+
+private:
+	char* _pStr;
+};
+
+
+void FunTest()
+{
+	String s1("hello");
+	//String s2(s1);
+
+	String s3;
+	s3 = s1;
+}
+
+int main()
+{
+	FunTest();
+	return 0;
+}
+*/
+
+/*
+// 深拷贝---简洁版
+class String
+{
+public:
+	String(const char* pStr = "")
+	{
+		if(NULL == pStr)
+		{
+			_pStr = new char[1];
+			*_pStr = '\0';
+		}
+		else
+		{
+			_pStr = new char[strlen(pStr)+1];
+			strcpy(_pStr, pStr);
+		}
+	}
+
+	// guo xu
+	String(const String& s)
+	{
+		String strTemp(s._pStr);
+		swap(_pStr, strTemp._pStr);
+	}
+
+	/* xu  yu 
+	String& operator=(const String& s)
+	{
+		if(this != &s)
+		{
+			String strTemp(s);
+			swap(_pStr, strTemp._pStr);
+		}
+
+		return *this;
+	}
+	*/
+
+	/* guo wen tao 
+	String& operator=(const String& s)
+	{
+		String strTemp(s);
+		swap(_pStr, strTemp._pStr);
+		return *this;
+	}
+	*
+
+	/// 666---wang dai wen
+	String& operator=(String s)
+	{
+		swap(_pStr, s._pStr);
+		return *this;
+	}
+
+	~String()
+	{
+		if(_pStr)
+		{
+			delete[] _pStr;
+			_pStr = NULL;
+		}
+	}
+
+private:
+	char* _pStr;
+};
+
+void FunTest()
+{
+    String s1("hello");
+	String s2;
+
+	s2 = s1;
+}
+
+int main()
+{
+	 FunTest();
+	return 0;
+}
+*/
+
+/*
+// 计数：普通的类成员---X
+class String
+{
+public:
+	String(const char* pStr = "")
+	{
+		if(NULL == pStr)
+		{
+			_pStr = new char[1];
+			*_pStr = '\0';
+		}
+		else
+		{
+			_pStr = new char[strlen(pStr)+1];
+			strcpy(_pStr, pStr);
+		}
+
+		_count = 1;
+	}
+
+	String(const String& s)
+		: _pStr(s._pStr)
+		, _count(++s._count)
+	{}
+
+	~String()
+	{
+		if(_pStr && 0 == --_count)
+		{
+			delete[] _pStr;
+			_pStr = NULL;
+		}
+	}
+
+private:
+	char* _pStr;
+	mutable int _count;
+};
+
+
+void FunTest()
+{
+	String s1("hello");
+	String s2(s1);
+}
+
+int main()
+{
+	FunTest();
+	return 0;
+}
+*/
+
+/*
+// 计数：静态成员变量------X
+class String
+{
+public:
+	String(const char* pStr = "")
+	{
+		if(NULL == pStr)
+		{
+			_pStr = new char[1];
+			*_pStr = '\0';
+		}
+		else
+		{
+			_pStr = new char[strlen(pStr)+1];
+			strcpy(_pStr, pStr);
+		}
+
+		_count = 1;
+	}
+
+	String(const String& s)
+		: _pStr(s._pStr)
+	{
+		_count++;
+	}
+
+	~String()
+	{
+		if(_pStr && 0 == --_count)
+		{
+			delete[] _pStr;
+			_pStr = NULL;
+		}
+	}
+
+private:
+	char* _pStr;
+	static int _count;
+};
+
+int String::_count = 0;
+
+
+void FunTest()
+{
+	String s1("hello");
+	String s2(s1);
+
+	String s3;
+}
+
+int main()
+{
+	FunTest();
+	return 0;
+}
+*/
+
+
+/*
+// 计数
+class String
+{
+public:
+	String(const char* pStr = "")
+		: _pCount(new int(1))
+	{
+		if(NULL == pStr)
+		{
+			_pStr = new char[1];
+			*_pStr = '\0';
+		}
+		else
+		{
+			_pStr = new char[strlen(pStr)+1];
+			strcpy(_pStr, pStr);
+		}
+	}
+
+	String(const String& s)
+		: _pStr(s._pStr)
+		, _pCount(s._pCount)
+	{
+		++(*_pCount);
+	}
+
+	String& operator=(const String& s)
+	{
+		//if(this != &s)
+		if(_pStr != s._pStr)
+		{
+			if(_pStr && 0 == --*_pCount)
+			{
+				delete[] _pStr;
+				delete _pCount;
+			}
+
+			_pStr = s._pStr;
+			_pCount = s._pCount;
+			++*_pCount;
+		}
+
+		return *this;
+	}
+
+	~String()
+	{
+		if(_pStr && 0 == --*_pCount)
+		{
+			delete[] _pStr;
+			_pStr = NULL;
+
+			delete _pCount;
+			_pCount = NULL;
+		}
+	}
+
+private:
+	char* _pStr;
+	int* _pCount;
+};
+*/
+
+
+/*
+// 引用计数---浅拷贝
+class String
+{
+public:
+	String(const char* pStr = "")
+	{
+		if(NULL == pStr)
+		{
+			_pStr = new char[1+4];
+			_pStr += 4;
+			*_pStr = '\0';
+		}
+		else
+		{
+			_pStr = new char[strlen(pStr)+1 + 4];
+			_pStr += 4;
+			strcpy(_pStr, pStr);
+		}
+
+		GetRef() = 1;
+	}
+
+	String(const String& s)
+		: _pStr(s._pStr)
+	{
+		GetRef()++;
+	}
+
+	String& operator=(const String& s)
+	{
+		//if(this != &s)
+		if(_pStr != s._pStr)
+		{
+			Release();
+			_pStr = s._pStr;
+			++GetRef();
+		}
+
+		return *this;
+	}
+
+	~String()
+	{
+		Release();
+	}
+
+	char& operator[](size_t index)
+	{
+		/*
+
+		*
+		return _pStr[index];
+	}
+
+	const char& operator[](size_t index)const
+	{
+		return _pStr[index];
+	}
+
+private:
+	int& GetRef()
+	{
+		return *((int*)_pStr-1);
+	}
+
+	void Release()
+	{
+		if(_pStr && 0 == --GetRef())
+		{
+			_pStr -= 4;
+			delete[] _pStr;
+			_pStr = NULL;
+		}
+	}
+private:
+	char* _pStr;
+};
+
+
+void FunTest()
+{
+	String s1("hello");
+	String s2(s1);
+
+	s1[0] = 'w';//
+
+	String s3;
+	//s3 = s2;
+	s2 = s3;
+}
+
+int main()
+{
+	FunTest();
+	return 0;
+}
+*/
+
+/*
+typedef void (* FUNC)();
+
+int DoSomething (int i)
+{
+	cout<<"DoSomething" <<endl;
+	return 0;
+}
+
+void Test ()
+{
+	//
+	// reinterpret_cast可以编译器以FUNC的定义方式去看待DoSomething函数
+	// 所以非常的BUG，下面转换函数指针的代码是不可移植的，所以不建议这样用
+	// C++不保证所有的函数指针都被一样的使用，所以这样用有时会产生不确定的结果
+	//
+	FUNC f = reinterpret_cast< FUNC>(DoSomething );
+	f();
+}
+
+
+int main()
+{
+
+	const int a = 10;
+	int* pa = const_cast<int*>(&a);
+	*pa = 100;
+
+
+
+
+	
+	Test();
+	double d = 12.34;
+	int* p = reinterpret_cast<int*>(&d);
+
+	int i = static_cast<int>(d);
+
+	return 0;
+}
+*/
+
+/*
+class A
+{
+public :
+	virtual void f()
+	{}
+};
+
+class B : public A
+{};
+
+void fun (A* pa)
+{
+	// dynamic_cast会先检查是否能转换成功，能成功则转换，不能则返回
+	B* pb1 = static_cast<B*>(pa);
+	B* pb2 = dynamic_cast<B*>(pa);
+
+
+	cout<<"pb1:" <<pb1<< endl;
+	cout<<"pb2:" <<pb2<< endl;
+
+	//  单参
+}
+
+int main ()
+{
+	A a;
+	B b;
+	fun(&a);
+	fun(&b);
+	return 0;
+}
+*/
+
+int main()
+{
+	return 0;
+}
