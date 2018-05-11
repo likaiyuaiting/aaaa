@@ -1,0 +1,249 @@
+#include <iostream>
+using namespace std;
+
+/*
+class Test
+{
+public:
+	Test()
+	{
+		_data = 0;
+		cout<<"Test():"<<this<<endl;
+	}
+
+	~Test()
+	{
+		cout<<"~Test();"<<this<<endl;
+	}
+private:
+	int _data;
+};
+
+int main()
+{
+	int* p0 = new int;
+	Test* p1 = new Test;
+
+	delete p0;
+	delete p1;
+
+	Test* p2 = (Test*)operator new(sizeof(Test));
+	return 0;
+}
+*/
+
+/*
+class Test
+{
+public:
+	Test()
+	{
+		p = new int;
+		_data = 0;
+		cout<<"Test():"<<this<<endl;
+	}
+
+	~Test()
+	{
+		if(p)
+			delete p;
+		cout<<"~Test();"<<this<<endl;
+	}
+private:
+	int _data;
+	int* p;
+};
+
+int main()
+{
+	int* p0 = new int[10];   // 40
+	Test* p1 = new Test[10];  // 44
+		
+	cout<<&p1[0]<<endl;
+	cout<<&p1[1]<<endl;
+			
+		
+		
+	delete[] p0;
+	delete[] p1;	
+	return 0;
+}
+*/
+
+/*
+class Test
+{
+public:
+	Test()
+	{
+		cout<<"Test():"<<this<<endl;
+	}
+
+// 	void* operator new(size_t size)
+// 	{
+// 		return malloc(size);
+// 	}
+
+	~Test()
+	{
+		cout<<"~Test();"<<this<<endl;
+	}
+private:
+	int _data;
+};
+
+// 如何内存泄露检测？---
+// 
+// 
+void* operator new(size_t size, const char* fileName, const char* funcName, size_t line)
+{
+	cout<<fileName<<":"<<funcName<<":"<<line<<"-->"<<size<<endl;
+	return malloc(size);
+}
+
+#ifdef _DEBUG
+#define  new new(__FILE__, __FUNCDNAME__, __LINE__)
+#endif
+
+
+// operator delete
+int main()
+{
+	Test* p = new Test;// operator new
+	return 0;
+}
+*/
+
+/*
+class Test
+{
+public:
+	Test(int data)
+		: _data(data)
+	{
+		cout<<"Test():"<<this<<endl;
+	}
+
+	~Test()
+	{
+		cout<<"~Test();"<<this<<endl;
+	}
+private:
+	int _data;
+};
+
+
+int main()
+{
+	Test* p = (Test*)malloc(sizeof(Test));
+	new(p) Test(10); // 在已经存在的空间上执行构造函数
+
+	int array[10];
+	array[4] = 5;
+	*(array+4) = 5;
+	new(array+4) int(6);
+
+	return 0;
+}
+*/
+
+/*
+class Test
+{
+public:
+	Test(int data = 0)
+		: _data(data)
+	{
+		cout<<"Test():"<<this<<endl;
+	}
+
+	~Test()
+	{
+		cout<<"~Test();"<<this<<endl;
+	}
+private:
+	int _data;
+};
+
+#include <assert.h>
+
+Test* New()
+{
+     Test* p = (Test*)malloc(sizeof(Test));
+	 if(NULL == p)
+	 {
+		 assert(0);
+	 }
+
+	 new(p) Test;
+
+	 return p;
+}
+
+void Delete(Test* p)
+{
+	if(p)
+	{
+		p->~Test();
+		free(p);
+	}
+}
+
+Test* NewArray(size_t N)
+{
+	int* p = (int*)malloc(sizeof(Test)*N + 4);
+	*p = N;
+	Test* pt = (Test*)(p+1);
+	for(int i = 0; i < N; ++i)
+	{
+		new(pt+i) Test;
+	}
+
+	return pt;
+}
+
+void DeleteArray(Test* p)
+{
+	if(NULL == p)
+		return;
+
+	int* ps = (int*)p - 1;
+	size_t N = *ps;
+	for(int i = 0; i < N; ++i)
+	{
+		p[N-i-1].~Test();
+	}
+
+	free(ps);
+}
+
+int main()
+{
+	Test* pt1 = New();
+	Delete(pt1);
+
+	Test* pt2 = NewArray(10);
+	DeleteArray(pt2);
+	return 0;
+}
+*/
+
+class Test
+{
+public:
+	Test(int data = 0)
+	{}
+
+	~Test()
+	{
+		delete this;
+	}
+private:
+	int _data;
+};
+
+int main()
+{
+	Test t;
+	return 0;
+}
