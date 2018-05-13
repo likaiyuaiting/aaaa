@@ -1,0 +1,70 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<sys/socket.h>
+#include<string.h>
+#include<unistd.h>
+#include<arpa/inet.h>
+
+typedef struct cala
+{
+	int a;
+	int b;
+}cala;
+
+void err_handing(char* message)
+{
+	fputs(message,stderr);
+	fputs('\n',stderr);
+	exit(1);
+}
+
+int main(int argc,char* argv[])
+{
+	int sock;
+	struct sockaddr_in serv_addr;
+	char message[30];
+	int str_len;
+	cala num;
+	int x,y;
+	printf("请输入第一个数：");
+	scanf("%d",&x);
+	printf("请输入第一个数：");
+	scanf("%d",&y);
+	num.a=x;
+	num.b=y;
+	if(argc!=3)
+	{
+		printf("Usage:%s <ip> <port>\n",argv[1]);
+		exit(1);
+	}
+	
+	sock=socket(PF_INET,SOCK_STREAM,0);
+	if(sock==-1)
+	{
+		err_handing("socket() error");
+	}
+	
+	memset(&serv_addr,0,sizeof(serv_addr));
+	serv_addr.sin_family=AF_INET;
+	serv_addr.sin_addr.s_addr=inet_addr(argv[1]);
+	serv_addr.sin_port=htons(atoi(argv[2]));
+	
+	if(connect(sock,(struct sockaddr*)&serv_addr,sizeof(serv_addr))==-1)
+	{
+		err_handing("conoect error");
+	}
+	write(sock,(char*)&num,sizeof(num)）;
+	
+	str_len=read(sock,message,sizeof(message)-1);
+	if(str_len==-1)
+	{
+		err_handing("read error");
+	}
+	
+	printf("%s\n",message);
+	printf("Message form server: %d\n",atoi(message));
+	close(sock);
+	
+	
+	return 0;
+}
