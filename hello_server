@@ -1,0 +1,61 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<sys/socket.h>
+#include<string.h>
+#include<unistd.h>
+#include<arpa/inet.h>
+
+int main(int argc,int* argv[])
+{
+	int serv_sock;
+	int clent_sock;
+
+	struct sockaddr_in serv_addr;
+	struct sockaddr_in clent_addr;
+	socklen_t clent_addr_size;
+
+	char message[]="hello world!";
+
+	if(argc != 2 )
+	{
+		printf("Usage:%s <port>\n",argv[0]);
+		exit(1);
+	}
+
+	serv_sock=socket(PF_INET,SOCK_STREAM,0);
+	if(serv_sock==-1)
+	{
+		perror("socket()");
+		exit(1);
+	}
+	memset(&serv_addr,0,sizeof(serv_sock));
+	serv_addr.sin_family=AF_INET;
+	serv_addr.sin_addr.s_addr=htonl(INADDR_ANY);
+	serv_addr.sin_port=htons(atoi(argv[1]));
+
+	if(bind(serv_sock,(struct sockaddr*)&serv_addr,sizeof(serv_addr))==-1)
+	{
+		printf("bind() error)");
+		exit(1);
+	}
+
+	if(listen(serv_sock,5)==-1)
+	{
+		perror("listen()");
+			exit(1);
+	}
+
+	clent_addr_size=sizeof(clent_addr);
+	clent_sock=accept(serv_sock,(struct sockaddr*)&clent_addr,&clent_addr_size);
+	if(clent_sock==-1)
+	{
+		perror("accept");
+		exit(1);
+	}
+
+	write(clent_sock,message,sizeof(message));
+	close(serv_sock);
+	close(clent_sock);
+
+	return 0;
+}
